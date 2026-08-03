@@ -510,11 +510,22 @@ export default function Home() {
       }
     });
 
+    // Full breakdown across all hybrids, for the admin stats panel
+    const hybridBreakdown = HYBRIDS.map(hybrid => {
+      const count = countMap[hybrid] || 0;
+      return {
+        hybrid,
+        count,
+        percentage: total > 0 ? Math.round((count / total) * 100) : 0
+      };
+    }).sort((a, b) => b.count - a.count);
+
     return {
       total,
       totalHectares,
       avgHectares,
-      topHybrid
+      topHybrid,
+      hybridBreakdown
     };
   }, [registrations]);
 
@@ -885,6 +896,27 @@ export default function Home() {
                   <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl">
                     <p className="text-slate-500 font-medium">Top híbrido</p>
                     <p className="text-sm font-bold text-slate-900 mt-2 truncate">{stats.topHybrid}</p>
+                  </div>
+                </div>
+
+                {/* Hybrid recommendation breakdown */}
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 mb-5">
+                  <h3 className="text-xs font-semibold text-slate-500 mb-3">Híbridos más recomendados</h3>
+                  <div className="space-y-3">
+                    {stats.hybridBreakdown.map((h) => (
+                      <div key={h.hybrid}>
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="font-semibold text-slate-700">{h.hybrid}</span>
+                          <span className="text-slate-500">{h.count} · {h.percentage}%</span>
+                        </div>
+                        <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-agropack-green rounded-full transition-all duration-500"
+                            style={{ width: `${h.percentage}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
