@@ -560,17 +560,17 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center bg-slate-100 text-slate-800 sm:py-8">
+    <div className="w-full min-h-dvh flex flex-col items-center bg-slate-100 text-slate-800 sm:py-8">
 
       {/* Main Container: Mobile-First Max Width 440px, Centered and styled as an App layout */}
-      <div className="w-full max-w-[440px] min-h-screen sm:min-h-0 sm:rounded-2xl bg-white sm:shadow-lg flex flex-col overflow-hidden relative border border-slate-200">
+      <div className="w-full max-w-[440px] min-h-dvh sm:min-h-0 sm:rounded-2xl bg-white sm:shadow-lg flex flex-col sm:overflow-hidden relative border-0 sm:border sm:border-slate-200">
 
         {/* Header */}
         <header className="px-5 py-2.5 bg-white border-b border-slate-200 flex items-center justify-center sticky top-0 z-30">
           <button onClick={handleLogoTap} className="outline-none">
             <Image
               src="/logo.png"
-              alt="Agropack"
+              alt="Agropac"
               width={104}
               height={104}
               className="rounded-lg"
@@ -579,7 +579,7 @@ export default function Home() {
         </header>
 
         {/* Content Area */}
-        <main className="flex-1 flex flex-col p-6 overflow-y-auto bg-white">
+        <main className="flex-1 flex flex-col p-6 sm:overflow-y-auto bg-white">
 
           {/* STATE 1: REGISTRATION */}
           {appState === 'REGISTER' && (

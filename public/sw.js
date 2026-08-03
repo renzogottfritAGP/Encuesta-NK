@@ -1,4 +1,4 @@
-const CACHE_NAME = 'agropac-v1';
+const CACHE_NAME = 'agropac-v2';
 const ASSETS = [
   '/',
   '/manifest.json',
