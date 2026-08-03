@@ -156,9 +156,9 @@ const QUESTIONS: Question[] = [
     id: "P3",
     question: "¿Cuál es tu principal fecha de siembra?",
     options: [
-      { text: "Mediados de octubre (Temprana)" },
-      { text: "Noviembre (Intermedia)" },
-      { text: "Diciembre (Tardía / 2da)" },
+      { text: "Mediados de octubre" },
+      { text: "Noviembre" },
+      { text: "Diciembre" },
     ],
   },
   {
@@ -179,9 +179,9 @@ const PROFILE_QUESTIONS: Question[] = [
     question: "¿Cómo te definís como productor?",
     options: [
       { text: "Buscador de potencial" },
-      { text: "Especulador de mercado", desc: "Rotación según los precios" },
+      { text: "Rotación según los precios" },
       { text: "Equilibrado" },
-      { text: "Conservador", desc: "Rotación más estable" },
+      { text: "Rotación más estable" },
     ],
   },
   {
