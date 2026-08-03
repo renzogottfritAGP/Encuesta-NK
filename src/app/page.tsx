@@ -145,7 +145,7 @@ const QUESTIONS: Question[] = [
   },
   {
     id: "P2",
-    question: "¿Qué tipo de prolificidad preferís en un maíz?",
+    question: "¿Qué tipo de prolificidad buscás en un maíz?",
     options: [
       { text: "Macollador" },
       { text: "Prolificidad en 2da espiga" },
@@ -154,7 +154,7 @@ const QUESTIONS: Question[] = [
   },
   {
     id: "P3",
-    question: "¿Qué fecha de siembra solés utilizar?",
+    question: "¿Cuál es tu principal fecha de siembra?",
     options: [
       { text: "Mediados de octubre (Temprana)" },
       { text: "Noviembre (Intermedia)" },
@@ -179,27 +179,30 @@ const PROFILE_QUESTIONS: Question[] = [
     question: "¿Cómo te definís como productor?",
     options: [
       { text: "Buscador de potencial" },
-      { text: "Especulador de mercado" },
+      { text: "Especulador de mercado", desc: "Rotación según los precios" },
       { text: "Equilibrado" },
-      { text: "Conservador inteligente" },
+      { text: "Conservador", desc: "Rotación más estable" },
     ],
   },
   {
     id: "Q2",
     question: "Tu superficie de maíz este año",
     options: [
-      { text: "Crece un 20%" },
-      { text: "Se mantiene igual" },
       { text: "Baja un 20%" },
+      { text: "Baja un 10%" },
+      { text: "Se mantiene igual" },
+      { text: "Crece un 10%" },
+      { text: "Crece un 20%" },
     ],
   },
   {
     id: "Q3",
-    question: "¿Cuáles son tus mayores problemáticas hoy en el maíz?",
+    question: "¿Cuál es tu principal maleza problema en el cultivo de maíz?",
     options: [
-      { text: "Malezas" },
-      { text: "Ciclo" },
-      { text: "Enfermedades" },
+      { text: "Yuyo colorado" },
+      { text: "Nabo" },
+      { text: "Gramíneas de verano" },
+      { text: "Otro" },
     ],
   },
 ];
@@ -792,37 +795,26 @@ export default function Home() {
                 </div>
 
                 {/* Match Comparison List */}
-                <div className="space-y-4 bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6">
-                  <h3 className="text-xs font-semibold text-slate-500 mb-2">Compatibilidad del portafolio</h3>
+                <div className="space-y-2 bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6">
+                  <h3 className="text-xs font-semibold text-slate-500 mb-2">Ranking del portafolio</h3>
 
                   {currentResult.recommendations.map((r, i) => {
                     const isWinner = r.hybrid === currentResult.primary;
-                    const isAttenuated = r.percentage < 15; // Dim low compatibility items
 
                     return (
                       <div
                         key={r.hybrid}
-                        className={`space-y-1.5 transition-opacity duration-300 ${
-                          isAttenuated ? 'opacity-40' : 'opacity-100'
-                        }`}
+                        className={`flex items-center gap-3 p-2 rounded-lg ${isWinner ? 'bg-agropac-green/5' : ''}`}
                       >
-                        <div className="flex justify-between items-center text-xs font-semibold">
-                          <span className={isWinner ? 'text-slate-900 flex items-center gap-1' : 'text-slate-600'}>
-                            {r.hybrid} {isWinner && <FaStar className="text-agropac-orange text-[10px]" />}
-                          </span>
-                          <span className={isWinner ? 'text-agropac-green-dark' : 'text-slate-500'}>
-                            {r.percentage}%
-                          </span>
-                        </div>
-                        {/* Progress Bar Container */}
-                        <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
-                          <div
-                            className={`h-full rounded-full transition-all duration-700 ${
-                              isWinner ? 'bg-agropac-green' : 'bg-slate-300'
-                            }`}
-                            style={{ width: `${r.percentage}%` }}
-                          />
-                        </div>
+                        <span className={`flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold shrink-0 ${
+                          isWinner ? 'bg-agropac-green text-white' : 'bg-slate-200 text-slate-600'
+                        }`}>
+                          {i + 1}°
+                        </span>
+                        <span className={`text-sm font-semibold flex-1 ${isWinner ? 'text-slate-900' : 'text-slate-600'}`}>
+                          {r.hybrid}
+                        </span>
+                        {isWinner && <FaStar className="text-agropac-orange text-xs" />}
                       </div>
                     );
                   })}
