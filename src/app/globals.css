@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --color-agropac-green: #00643b;
-  --color-agropac-green-dark: #004a2c;
-  --color-agropac-orange: #ed7314;
-  --color-agropac-lime: #c3d453;
+  --color-agropack-green: #00643b;
+  --color-agropack-green-dark: #004a2c;
+  --color-agropack-orange: #ed7314;
+  --color-agropack-lime: #c3d453;
   --color-nk-red: #e63946;
 }
 

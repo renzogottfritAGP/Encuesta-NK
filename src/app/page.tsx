@@ -155,10 +155,8 @@ const PROFILE_QUESTIONS: Question[] = [
     id: "Q1",
     question: "¿Cómo te definís como productor?",
     options: [
-      { text: "Buscador de potencial" },
-      { text: "Rotación según los precios" },
-      { text: "Equilibrado" },
-      { text: "Rotación más estable" },
+      { text: "Conservador (Rotación más estable)" },
+      { text: "Especulador de mercado (Rotación según los precios)" },
     ],
   },
   {
@@ -427,7 +425,7 @@ export default function Home() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `agropac_asistentes_nk_${new Date().toISOString().split("T")[0]}.csv`);
+    link.setAttribute("download", `agropack_asistentes_nk_${new Date().toISOString().split("T")[0]}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -486,7 +484,7 @@ export default function Home() {
     const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(registrations, null, 2));
     const dlAnchorElem = document.createElement('a');
     dlAnchorElem.setAttribute("href", dataStr);
-    dlAnchorElem.setAttribute("download", `agropac_respaldo_${new Date().toISOString().split("T")[0]}.json`);
+    dlAnchorElem.setAttribute("download", `agropack_respaldo_${new Date().toISOString().split("T")[0]}.json`);
     dlAnchorElem.click();
   };
 
@@ -571,7 +569,7 @@ export default function Home() {
           <button onClick={handleLogoTap} className="outline-none">
             <Image
               src="/logo.png"
-              alt="Agropac"
+              alt="Agropack"
               width={104}
               height={104}
               className="rounded-lg"
@@ -588,7 +586,7 @@ export default function Home() {
               <div>
                 <div className="text-center mt-2 mb-7">
                   <h1 className="text-xl font-bold text-slate-900 tracking-tight">
-                    ¿Cuál es tu híbrido <span className="text-agropac-green">NK ideal</span>?
+                    ¿Cuál es tu híbrido <span className="text-agropack-green">NK ideal</span>?
                   </h1>
                   <p className="text-sm text-slate-500 mt-2 max-w-[280px] mx-auto leading-relaxed">
                     Completá tus datos, respondé unas preguntas agronómicas y obtené la recomendación para tus lotes.
@@ -608,7 +606,7 @@ export default function Home() {
                         placeholder="Ej: Juan Pérez"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className={`w-full bg-slate-50 border ${formErrors.name ? 'border-nk-red' : 'border-slate-200'} focus:border-agropac-green focus:ring-1 focus:ring-agropac-green rounded-lg py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition-colors`}
+                        className={`w-full bg-slate-50 border ${formErrors.name ? 'border-nk-red' : 'border-slate-200'} focus:border-agropack-green focus:ring-1 focus:ring-agropack-green rounded-lg py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition-colors`}
                       />
                     </div>
                     {formErrors.name && <p className="text-xs text-nk-red mt-1">{formErrors.name}</p>}
@@ -626,7 +624,7 @@ export default function Home() {
                         placeholder="Ej: +54 9 341 555 1234"
                         value={formData.phone}
                         onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className={`w-full bg-slate-50 border ${formErrors.phone ? 'border-nk-red' : 'border-slate-200'} focus:border-agropac-green focus:ring-1 focus:ring-agropac-green rounded-lg py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition-colors`}
+                        className={`w-full bg-slate-50 border ${formErrors.phone ? 'border-nk-red' : 'border-slate-200'} focus:border-agropack-green focus:ring-1 focus:ring-agropack-green rounded-lg py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition-colors`}
                       />
                     </div>
                     {formErrors.phone && <p className="text-xs text-nk-red mt-1">{formErrors.phone}</p>}
@@ -647,7 +645,7 @@ export default function Home() {
                         placeholder="Ej: 150"
                         value={formData.hectares}
                         onChange={(e) => setFormData({ ...formData, hectares: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200 focus:border-agropac-green focus:ring-1 focus:ring-agropac-green rounded-lg py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition-colors"
+                        className="w-full bg-slate-50 border border-slate-200 focus:border-agropack-green focus:ring-1 focus:ring-agropack-green rounded-lg py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition-colors"
                       />
                     </div>
                   </div>
@@ -658,7 +656,7 @@ export default function Home() {
                 {/* Submit Button */}
                 <button
                   onClick={handleStartSurvey}
-                  className="w-full bg-agropac-green hover:bg-agropac-green-dark text-white font-semibold text-sm py-3.5 rounded-xl transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
+                  className="w-full bg-agropack-green hover:bg-agropack-green-dark text-white font-semibold text-sm py-3.5 rounded-xl transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
                 >
                   <span>Comenzar encuesta</span>
                   <FaChevronRight className="text-xs" />
@@ -695,7 +693,7 @@ export default function Home() {
                 {/* Progress Bar */}
                 <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mb-6">
                   <div
-                    className="h-full bg-agropac-green rounded-full transition-all duration-500"
+                    className="h-full bg-agropack-green rounded-full transition-all duration-500"
                     style={{ width: `${((currentQuestionIndex + 1) / ALL_QUESTIONS.length) * 100}%` }}
                   />
                 </div>
@@ -715,12 +713,12 @@ export default function Home() {
                         onClick={() => handleSelectOption(ALL_QUESTIONS[currentQuestionIndex].id, index)}
                         className={`w-full text-left p-4 rounded-xl border transition-colors active:scale-[0.99] flex justify-between items-center gap-4 ${
                           isSelected
-                            ? 'bg-agropac-green/5 border-agropac-green text-slate-900'
+                            ? 'bg-agropack-green/5 border-agropack-green text-slate-900'
                             : 'bg-white border-slate-200 hover:border-slate-300 text-slate-700'
                         }`}
                       >
                         <div className="flex-1">
-                          <h3 className={`text-sm font-semibold leading-tight ${isSelected ? 'text-agropac-green-dark' : 'text-slate-800'}`}>
+                          <h3 className={`text-sm font-semibold leading-tight ${isSelected ? 'text-agropack-green-dark' : 'text-slate-800'}`}>
                             {opt.text}
                           </h3>
                           {opt.desc && (
@@ -733,7 +731,7 @@ export default function Home() {
                         {/* Visual Radio Bullet */}
                         <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
                           isSelected
-                            ? 'border-agropac-green bg-agropac-green'
+                            ? 'border-agropack-green bg-agropack-green'
                             : 'border-slate-300 bg-slate-50'
                         }`}>
                           {isSelected && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
@@ -770,7 +768,7 @@ export default function Home() {
                   <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
                     {HYBRIDS_INFO[currentResult.primary as keyof typeof HYBRIDS_INFO].name}
                   </h1>
-                  <p className="text-sm text-agropac-green-dark font-semibold mt-1">
+                  <p className="text-sm text-agropack-green-dark font-semibold mt-1">
                     {HYBRIDS_INFO[currentResult.primary as keyof typeof HYBRIDS_INFO].tagline}
                   </p>
                 </div>
@@ -785,7 +783,7 @@ export default function Home() {
                     <p className="text-xs font-semibold text-slate-500 mb-1">Puntos clave del material</p>
                     {HYBRIDS_INFO[currentResult.primary as keyof typeof HYBRIDS_INFO].bulletPoints.map((bp, i) => (
                       <div key={i} className="flex items-start gap-2.5">
-                        <span className="w-1.5 h-1.5 bg-agropac-green rounded-full mt-1.5 shrink-0" />
+                        <span className="w-1.5 h-1.5 bg-agropack-green rounded-full mt-1.5 shrink-0" />
                         <p className="text-xs text-slate-700 leading-tight">{bp}</p>
                       </div>
                     ))}
@@ -802,17 +800,17 @@ export default function Home() {
                     return (
                       <div
                         key={r.hybrid}
-                        className={`flex items-center gap-3 p-2 rounded-lg ${isWinner ? 'bg-agropac-green/5' : ''}`}
+                        className={`flex items-center gap-3 p-2 rounded-lg ${isWinner ? 'bg-agropack-green/5' : ''}`}
                       >
                         <span className={`flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold shrink-0 ${
-                          isWinner ? 'bg-agropac-green text-white' : 'bg-slate-200 text-slate-600'
+                          isWinner ? 'bg-agropack-green text-white' : 'bg-slate-200 text-slate-600'
                         }`}>
                           {i + 1}°
                         </span>
                         <span className={`text-sm font-semibold flex-1 ${isWinner ? 'text-slate-900' : 'text-slate-600'}`}>
                           {r.hybrid}
                         </span>
-                        {isWinner && <FaStar className="text-agropac-orange text-xs" />}
+                        {isWinner && <FaStar className="text-agropack-orange text-xs" />}
                       </div>
                     );
                   })}
@@ -827,7 +825,7 @@ export default function Home() {
                     setFormData({ name: "", phone: "", location: "", hectares: "" });
                     setAppState('REGISTER');
                   }}
-                  className="w-full bg-agropac-green hover:bg-agropac-green-dark text-white font-semibold text-sm py-3.5 rounded-xl transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
+                  className="w-full bg-agropack-green hover:bg-agropack-green-dark text-white font-semibold text-sm py-3.5 rounded-xl transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
                 >
                   <FaUndo className="text-xs" />
                   <span>Nuevo productor</span>
@@ -842,7 +840,7 @@ export default function Home() {
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <FaChartBar className="text-agropac-green text-sm" />
+                    <FaChartBar className="text-agropack-green text-sm" />
                     Panel comercial
                   </h2>
                   <div className="flex items-center gap-2">
@@ -878,7 +876,7 @@ export default function Home() {
                   </div>
                   <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl">
                     <p className="text-slate-500 font-medium">Hectáreas totales</p>
-                    <p className="text-xl font-bold text-agropac-green mt-1">{stats.totalHectares} ha</p>
+                    <p className="text-xl font-bold text-agropack-green mt-1">{stats.totalHectares} ha</p>
                   </div>
                   <div className="bg-slate-50 border border-slate-200 p-3 rounded-xl">
                     <p className="text-slate-500 font-medium">Promedio / prod.</p>
@@ -932,7 +930,7 @@ export default function Home() {
                     placeholder="Buscar por productor, zona o híbrido..."
                     value={adminSearch}
                     onChange={(e) => setAdminSearch(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 focus:border-agropac-green focus:ring-1 focus:ring-agropac-green rounded-lg py-2.5 pl-9 pr-4 text-slate-800 placeholder-slate-400 outline-none transition-colors"
+                    className="w-full bg-slate-50 border border-slate-200 focus:border-agropack-green focus:ring-1 focus:ring-agropack-green rounded-lg py-2.5 pl-9 pr-4 text-slate-800 placeholder-slate-400 outline-none transition-colors"
                   />
                 </div>
 
@@ -967,7 +965,7 @@ export default function Home() {
                           {reg.location}
                         </div>
                         <div className="col-span-4">
-                          <span className="font-semibold text-agropac-green-dark block">{reg.primaryRecommendation}</span>
+                          <span className="font-semibold text-agropack-green-dark block">{reg.primaryRecommendation}</span>
                           <span className="text-slate-400 mt-0.5 block">
                             {reg.hectares ? `${reg.hectares} ha` : 'S/D'}
                           </span>
@@ -999,11 +997,11 @@ export default function Home() {
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center p-4">
           <div className="bg-white border border-slate-200 rounded-2xl p-6 w-full max-w-[340px] shadow-xl animate-scaleUp text-slate-800">
             <div className="text-center mb-5">
-              <div className="w-10 h-10 rounded-full bg-agropac-orange/15 text-agropac-orange mx-auto flex items-center justify-center mb-3">
+              <div className="w-10 h-10 rounded-full bg-agropack-orange/15 text-agropack-orange mx-auto flex items-center justify-center mb-3">
                 <FaLock />
               </div>
               <h3 className="text-sm font-bold text-slate-900">Acceso restringido</h3>
-              <p className="text-xs text-slate-500 mt-1">Solo para el equipo comercial de Agropac.</p>
+              <p className="text-xs text-slate-500 mt-1">Solo para el equipo comercial de Agropack.</p>
             </div>
 
             <form onSubmit={handleVerifyPassword} className="space-y-4">
@@ -1016,7 +1014,7 @@ export default function Home() {
                     setAdminPassword(e.target.value);
                     setPasswordError("");
                   }}
-                  className="w-full bg-slate-50 border border-slate-200 focus:border-agropac-green focus:ring-1 focus:ring-agropac-green rounded-lg py-3 px-4 text-sm text-center outline-none transition-colors text-slate-800"
+                  className="w-full bg-slate-50 border border-slate-200 focus:border-agropack-green focus:ring-1 focus:ring-agropack-green rounded-lg py-3 px-4 text-sm text-center outline-none transition-colors text-slate-800"
                   autoFocus
                 />
                 {passwordError && <p className="text-xs text-nk-red text-center font-semibold mt-1.5">{passwordError}</p>}
@@ -1032,7 +1030,7 @@ export default function Home() {
                 </button>
                 <button
                   type="submit"
-                  className="bg-agropac-green hover:bg-agropac-green-dark text-white font-semibold py-2.5 rounded-lg text-xs transition-colors"
+                  className="bg-agropack-green hover:bg-agropack-green-dark text-white font-semibold py-2.5 rounded-lg text-xs transition-colors"
                 >
                   Ingresar
                 </button>

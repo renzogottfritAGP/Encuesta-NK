@@ -13,13 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AGROPAC | Recomendador de Híbridos NK",
+  title: "AGROPACK | Recomendador de Híbridos NK",
   description: "Encuentra el híbrido de maíz ideal para tus lotes y regístrate para el sorteo del evento.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Agropac NK",
+    title: "Agropack NK",
   },
 };
 
@@ -45,7 +45,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
-      <body className="min-h-full flex flex-col bg-slate-50 text-slate-800 selection:bg-agropac-green selection:text-white">
+      <body className="min-h-full flex flex-col bg-slate-50 text-slate-800 selection:bg-agropack-green selection:text-white">
         {children}
         {process.env.NODE_ENV === "production" && (
           <script

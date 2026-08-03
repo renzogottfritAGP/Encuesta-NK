@@ -1,7 +1,7 @@
 {
-  "name": "Agropac - Recomendador Híbridos NK",
-  "short_name": "Agropac NK",
-  "description": "Recomendador de híbridos de maíz NK para la Jornada Técnica AGROPAC.",
+  "name": "Agropack - Recomendador Híbridos NK",
+  "short_name": "Agropack NK",
+  "description": "Recomendador de híbridos de maíz NK para la Jornada Técnica AGROPACK.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0F172A",
