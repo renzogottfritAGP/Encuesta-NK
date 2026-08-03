@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useMemo, useRef } from "react";
 import Image from "next/image";
 import {
   FaUser,
@@ -16,33 +16,10 @@ import {
   FaSignOutAlt,
   FaUpload,
   FaChevronRight,
-  FaStar
+  FaStar,
+  FaSyncAlt
 } from "react-icons/fa";
-
-// Types
-interface Registration {
-  id: string;
-  name: string;
-  phone: string;
-  location: string;
-  hectares: number | null;
-  timestamp: string;
-  answers: {
-    P1: number;
-    P2: number;
-    P3: number;
-    P4: number;
-  };
-  profile: string;
-  areaTrend: string;
-  mainIssue: string;
-  recommendations: {
-    hybrid: string;
-    percentage: number;
-    score: number;
-  }[];
-  primaryRecommendation: string;
-}
+import type { Registration } from "@/lib/registrations";
 
 // NK Hybrid Details
 const HYBRIDS_INFO = {
@@ -249,22 +226,28 @@ export default function Home() {
   const [adminSortKey, setAdminSortKey] = useState<keyof Registration | 'date'>('date');
   const [adminSortDir, setAdminSortDir] = useState<'asc' | 'desc'>('desc');
 
-  // Load database from localStorage on mount
-  useEffect(() => {
-    const stored = localStorage.getItem("agropac_registros");
-    if (stored) {
-      try {
-        setRegistrations(JSON.parse(stored));
-      } catch (e) {
-        console.error("Error parsing stored registrations", e);
-      }
-    }
-  }, []);
+  const [adminLoading, setAdminLoading] = useState(false);
+  const [adminLoadError, setAdminLoadError] = useState("");
 
-  // Save database to localStorage when updated
-  const saveRegistrations = (newList: Registration[]) => {
-    setRegistrations(newList);
-    localStorage.setItem("agropac_registros", JSON.stringify(newList));
+  // Fetch the shared registration list from the server (all devices see the same data)
+  const fetchRegistrations = async (password: string) => {
+    setAdminLoading(true);
+    setAdminLoadError("");
+    try {
+      const res = await fetch("/api/registrations", {
+        headers: { Authorization: `Bearer ${password}` },
+      });
+      if (!res.ok) throw new Error("request failed");
+      const data: Registration[] = await res.json();
+      setRegistrations(data);
+      return true;
+    } catch (e) {
+      console.error("Error fetching registrations", e);
+      setAdminLoadError("No se pudo cargar la lista de productores. Revisá tu conexión.");
+      return false;
+    } finally {
+      setAdminLoading(false);
+    }
   };
 
   // Recommendations scoring math
@@ -354,9 +337,13 @@ export default function Home() {
           primaryRecommendation: finalResults.primary
         };
 
-        // Save
-        const newList = [newReg, ...registrations];
-        saveRegistrations(newList);
+        // Save to the shared database (best-effort: the producer still sees their
+        // result even if the venue's connection drops mid-submit)
+        fetch("/api/registrations", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newReg),
+        }).catch((e) => console.error("Error saving registration", e));
 
         // Display results
         setCurrentResult({
@@ -399,13 +386,14 @@ export default function Home() {
     }
   };
 
-  const handleVerifyPassword = (e: React.FormEvent) => {
+  const handleVerifyPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (adminPassword === "agropac2026") {
+    const ok = await fetchRegistrations(adminPassword);
+    if (ok) {
       setShowPasswordModal(false);
       setAppState('ADMIN');
     } else {
-      setPasswordError("Contraseña incorrecta. Reintentar.");
+      setPasswordError("Contraseña incorrecta o sin conexión. Reintentar.");
     }
   };
 
@@ -446,10 +434,19 @@ export default function Home() {
   };
 
   // Clear data
-  const handleResetDatabase = () => {
+  const handleResetDatabase = async () => {
     if (confirm("¿Estás absolutamente seguro de vaciar TODA la lista de productores inscritos? Esta acción no se puede deshacer.")) {
-      saveRegistrations([]);
-      alert("Base de datos reiniciada con éxito.");
+      try {
+        const res = await fetch("/api/registrations", {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${adminPassword}` },
+        });
+        if (!res.ok) throw new Error("request failed");
+        setRegistrations([]);
+        alert("Base de datos reiniciada con éxito.");
+      } catch (e) {
+        alert("No se pudo vaciar la base de datos. Revisá tu conexión.");
+      }
     }
   };
 
@@ -459,26 +456,27 @@ export default function Home() {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       try {
         const imported = JSON.parse(event.target?.result as string);
         if (Array.isArray(imported)) {
-          // Merge lists checking for duplicates by ID
-          const merged = [...imported];
-          registrations.forEach(r => {
-            if (!merged.some(m => m.id === r.id)) {
-              merged.push(r);
-            }
+          const res = await fetch("/api/registrations/import", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${adminPassword}`,
+            },
+            body: JSON.stringify(imported),
           });
-          // Sort merged by timestamp
-          merged.sort((a,b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
-          saveRegistrations(merged);
-          alert(`Importación exitosa! Se consolidaron ${imported.length} registros.`);
+          if (!res.ok) throw new Error("request failed");
+          const result = await res.json();
+          await fetchRegistrations(adminPassword);
+          alert(`Importación exitosa! Se consolidaron ${result.imported} registros.`);
         } else {
           alert("El archivo no tiene un formato válido de base de datos.");
         }
       } catch (err) {
-        alert("Error al leer el archivo JSON.");
+        alert("Error al importar el archivo JSON.");
       }
     };
     reader.readAsText(file);
@@ -847,15 +845,30 @@ export default function Home() {
                     <FaChartBar className="text-agropac-green text-sm" />
                     Panel comercial
                   </h2>
-                  <button
-                    onClick={() => setAppState('REGISTER')}
-                    className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 text-slate-600 px-2.5 py-1 rounded-full font-semibold hover:bg-slate-200 transition-colors"
-                  >
-                    <FaSignOutAlt className="text-[10px]" />
-                    Salir
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => fetchRegistrations(adminPassword)}
+                      disabled={adminLoading}
+                      className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 text-slate-600 px-2.5 py-1 rounded-full font-semibold hover:bg-slate-200 transition-colors disabled:opacity-50"
+                    >
+                      <FaSyncAlt className={`text-[10px] ${adminLoading ? 'animate-spin' : ''}`} />
+                      Actualizar
+                    </button>
+                    <button
+                      onClick={() => setAppState('REGISTER')}
+                      className="flex items-center gap-1.5 bg-slate-100 border border-slate-200 text-slate-600 px-2.5 py-1 rounded-full font-semibold hover:bg-slate-200 transition-colors"
+                    >
+                      <FaSignOutAlt className="text-[10px]" />
+                      Salir
+                    </button>
+                  </div>
                 </div>
-                <p className="text-slate-400 font-medium mb-4">{filteredRegistrations.length} productores</p>
+                <p className="text-slate-400 font-medium mb-4">
+                  {adminLoading ? "Cargando…" : `${filteredRegistrations.length} productores`}
+                </p>
+                {adminLoadError && (
+                  <p className="text-nk-red font-medium mb-4">{adminLoadError}</p>
+                )}
 
                 {/* KPIs Grid */}
                 <div className="grid grid-cols-2 gap-3 mb-5">
