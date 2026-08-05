@@ -3,7 +3,7 @@ import { getDb } from "./db";
 export interface Registration {
   id: string;
   name: string;
-  phone: string;
+  cuit: string;
   location: string;
   hectares: number | null;
   timestamp: string;
@@ -27,7 +27,7 @@ export interface Registration {
 interface RegistrationRow {
   id: string;
   name: string;
-  phone: string;
+  cuit: string;
   location: string;
   hectares: number | null;
   timestamp: Date;
@@ -43,7 +43,7 @@ function rowToRegistration(row: RegistrationRow): Registration {
   return {
     id: row.id,
     name: row.name,
-    phone: row.phone,
+    cuit: row.cuit,
     location: row.location,
     hectares: row.hectares,
     timestamp: new Date(row.timestamp).toISOString(),
@@ -68,13 +68,13 @@ export async function insertRegistration(reg: Registration): Promise<void> {
   const db = await getDb();
   await db.query(
     `INSERT INTO registrations
-      (id, name, phone, location, hectares, "timestamp", answers, profile, area_trend, main_issue, recommendations, primary_recommendation)
+      (id, name, cuit, location, hectares, "timestamp", answers, profile, area_trend, main_issue, recommendations, primary_recommendation)
      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
      ON CONFLICT (id) DO NOTHING`,
     [
       reg.id,
       reg.name,
-      reg.phone,
+      reg.cuit,
       reg.location,
       reg.hectares,
       reg.timestamp,
@@ -100,7 +100,7 @@ export async function importRegistrations(regs: Registration[]): Promise<number>
       !reg ||
       typeof reg.id !== "string" ||
       typeof reg.name !== "string" ||
-      typeof reg.phone !== "string"
+      typeof reg.cuit !== "string"
     ) {
       continue;
     }

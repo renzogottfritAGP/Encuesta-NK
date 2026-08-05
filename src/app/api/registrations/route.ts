@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const body = (await request.json()) as Registration;
 
-  if (!body || typeof body.id !== "string" || typeof body.name !== "string" || typeof body.phone !== "string") {
+  if (!body || typeof body.id !== "string" || typeof body.name !== "string" || typeof body.cuit !== "string") {
     return NextResponse.json({ error: "Registro inválido" }, { status: 400 });
   }
 

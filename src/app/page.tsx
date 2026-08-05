@@ -4,7 +4,7 @@ import { useState, useMemo, useRef } from "react";
 import Image from "next/image";
 import {
   FaUser,
-  FaWhatsapp,
+  FaIdCard,
   FaSeedling,
   FaChartBar,
   FaFileDownload,
@@ -191,7 +191,7 @@ export default function Home() {
   // User form details
   const [formData, setFormData] = useState({
     name: "",
-    phone: "",
+    cuit: "",
     location: "",
     hectares: ""
   });
@@ -293,7 +293,7 @@ export default function Home() {
     e.preventDefault();
     const errors: Record<string, string> = {};
     if (!formData.name.trim()) errors.name = "El nombre y apellido es obligatorio.";
-    if (!formData.phone.trim()) errors.phone = "El WhatsApp / Teléfono es obligatorio.";
+    if (!formData.cuit.trim()) errors.cuit = "El CUIT es obligatorio.";
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -323,7 +323,7 @@ export default function Home() {
         const newReg: Registration = {
           id: Date.now().toString(),
           name: formData.name.trim(),
-          phone: formData.phone.trim(),
+          cuit: formData.cuit.trim(),
           location: formData.location.trim(),
           hectares: formData.hectares ? parseFloat(formData.hectares) : null,
           timestamp: new Date().toISOString(),
@@ -401,10 +401,10 @@ export default function Home() {
       alert("No hay registros para exportar.");
       return;
     }
-    const headers = ["Nombre y Apellido", "WhatsApp / Tel", "Localidad / Zona", "Hectáreas Maíz", "Perfil de Productor", "Tendencia de Superficie", "Principal Problemática", "Recomendación Principal", "Porcentaje Coincidencia", "Fecha Registro"];
+    const headers = ["Nombre y Apellido", "CUIT", "Localidad / Zona", "Hectáreas Maíz", "Perfil de Productor", "Tendencia de Superficie", "Principal Problemática", "Recomendación Principal", "Porcentaje Coincidencia", "Fecha Registro"];
     const rows = registrations.map((r) => [
       r.name,
-      r.phone,
+      r.cuit,
       r.location,
       r.hectares !== null ? r.hectares.toString() : "N/C",
       r.profile || "N/C",
@@ -536,7 +536,7 @@ export default function Home() {
       if (!q) return true;
       return (
         r.name.toLowerCase().includes(q) ||
-        r.phone.toLowerCase().includes(q) ||
+        r.cuit.toLowerCase().includes(q) ||
         r.location.toLowerCase().includes(q) ||
         r.primaryRecommendation.toLowerCase().includes(q)
       );
@@ -623,22 +623,22 @@ export default function Home() {
                     {formErrors.name && <p className="text-xs text-nk-red mt-1">{formErrors.name}</p>}
                   </div>
 
-                  {/* WhatsApp */}
+                  {/* CUIT */}
                   <div>
-                    <label className="block text-xs font-semibold text-slate-600 mb-1.5">WhatsApp / Teléfono *</label>
+                    <label className="block text-xs font-semibold text-slate-600 mb-1.5">CUIT *</label>
                     <div className="relative">
                       <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-400">
-                        <FaWhatsapp className="text-base text-green-600" />
+                        <FaIdCard className="text-sm" />
                       </span>
                       <input
-                        type="tel"
-                        placeholder="Ej: +54 9 341 555 1234"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className={`w-full bg-slate-50 border ${formErrors.phone ? 'border-nk-red' : 'border-slate-200'} focus:border-agropack-green focus:ring-1 focus:ring-agropack-green rounded-lg py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition-colors`}
+                        type="text"
+                        placeholder="Ej: 20-12345678-9"
+                        value={formData.cuit}
+                        onChange={(e) => setFormData({ ...formData, cuit: e.target.value })}
+                        className={`w-full bg-slate-50 border ${formErrors.cuit ? 'border-nk-red' : 'border-slate-200'} focus:border-agropack-green focus:ring-1 focus:ring-agropack-green rounded-lg py-3 pl-10 pr-4 text-sm text-slate-800 placeholder-slate-400 outline-none transition-colors`}
                       />
                     </div>
-                    {formErrors.phone && <p className="text-xs text-nk-red mt-1">{formErrors.phone}</p>}
+                    {formErrors.cuit && <p className="text-xs text-nk-red mt-1">{formErrors.cuit}</p>}
                   </div>
 
                   {/* Superficie Maíz (Hectáreas) */}
@@ -833,7 +833,7 @@ export default function Home() {
                 {/* Reset button to register next */}
                 <button
                   onClick={() => {
-                    setFormData({ name: "", phone: "", location: "", hectares: "" });
+                    setFormData({ name: "", cuit: "", location: "", hectares: "" });
                     setAppState('REGISTER');
                   }}
                   className="w-full bg-agropack-green hover:bg-agropack-green-dark text-white font-semibold text-sm py-3.5 rounded-xl transition-colors active:scale-[0.98] flex items-center justify-center gap-2"
@@ -991,7 +991,7 @@ export default function Home() {
                       >
                         <div className="col-span-5 pr-1">
                           <p className="font-semibold text-slate-800 truncate">{reg.name}</p>
-                          <p className="text-slate-400 font-mono mt-0.5">{reg.phone}</p>
+                          <p className="text-slate-400 font-mono mt-0.5">{reg.cuit}</p>
                         </div>
                         <div className="col-span-3 truncate text-slate-600">
                           {reg.location}

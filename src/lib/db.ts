@@ -22,7 +22,7 @@ async function ensureSchema(pool: Pool): Promise<void> {
     CREATE TABLE IF NOT EXISTS registrations (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
-      phone TEXT NOT NULL,
+      cuit TEXT NOT NULL,
       location TEXT NOT NULL DEFAULT '',
       hectares DOUBLE PRECISION,
       "timestamp" TIMESTAMPTZ NOT NULL,
@@ -33,6 +33,22 @@ async function ensureSchema(pool: Pool): Promise<void> {
       recommendations JSONB NOT NULL,
       primary_recommendation TEXT NOT NULL
     )
+  `);
+
+  // Migrate older deployments that still have the "phone" column
+  await pool.query(`
+    DO $$
+    BEGIN
+      IF EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'registrations' AND column_name = 'phone'
+      ) AND NOT EXISTS (
+        SELECT 1 FROM information_schema.columns
+        WHERE table_name = 'registrations' AND column_name = 'cuit'
+      ) THEN
+        ALTER TABLE registrations RENAME COLUMN phone TO cuit;
+      END IF;
+    END $$;
   `);
 }
 
