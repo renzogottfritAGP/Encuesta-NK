@@ -395,13 +395,34 @@ export default function Home() {
     }
   };
 
+  // Looks up the option text a producer picked for a given scored question (P1-P4)
+  const getAnswerText = (questionId: string, index: number) => {
+    const question = ALL_QUESTIONS.find(q => q.id === questionId);
+    return question?.options[index]?.text ?? "N/C";
+  };
+
   // CSV Export with Spanish delimiting and UTF-8 BOM
   const handleExportCSV = () => {
     if (registrations.length === 0) {
       alert("No hay registros para exportar.");
       return;
     }
-    const headers = ["Nombre y Apellido", "CUIT", "Localidad / Zona", "Hectáreas Maíz", "Perfil de Productor", "Tendencia de Superficie", "Principal Problemática", "Recomendación Principal", "Porcentaje Coincidencia", "Fecha Registro"];
+    const headers = [
+      "Nombre y Apellido",
+      "CUIT",
+      "Localidad / Zona",
+      "Hectáreas Maíz",
+      "Perfil de Productor",
+      "Tendencia de Superficie",
+      "Principal Problemática",
+      "Lotes",
+      "Prolificidad",
+      "Fecha de Siembra",
+      "Destino",
+      ...HYBRIDS.map(h => `% ${h}`),
+      "Recomendación Principal",
+      "Fecha Registro",
+    ];
     const rows = registrations.map((r) => [
       r.name,
       r.cuit,
@@ -410,8 +431,12 @@ export default function Home() {
       r.profile || "N/C",
       r.areaTrend || "N/C",
       r.mainIssue || "N/C",
+      getAnswerText("P1", r.answers.P1),
+      getAnswerText("P2", r.answers.P2),
+      getAnswerText("P3", r.answers.P3),
+      getAnswerText("P4", r.answers.P4),
+      ...HYBRIDS.map(h => `${r.recommendations.find(rec => rec.hybrid === h)?.percentage ?? 0}%`),
       r.primaryRecommendation,
-      `${r.recommendations.find(rec => rec.hybrid === r.primaryRecommendation)?.percentage || 0}%`,
       new Date(r.timestamp).toLocaleString("es-AR"),
     ]);
 
